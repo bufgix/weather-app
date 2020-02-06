@@ -1,6 +1,6 @@
 # mercode-weather
 
-> An electron-vue project
+> Weather app for [MerOS](https://os.mercode.org/index.html)
 
 #### Build Setup
 
@@ -16,6 +16,13 @@ yarn build
 
 
 ```
+
+### Screenshots
+
+|   |   |
+|---|---|
+![resim](https://user-images.githubusercontent.com/22038798/73983562-c4b62b00-4947-11ea-8252-888c1774dfa3.png)  |  ![resim](https://user-images.githubusercontent.com/22038798/73983709-18287900-4948-11ea-8b13-bec54f4ea3e7.png)
+
 
 ---
 
