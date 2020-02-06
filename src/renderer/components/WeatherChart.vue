@@ -1,89 +1,117 @@
+<template>
+  <base-chart  :chart-data="this.chartData" :options="this.options"></base-chart>
+</template>
+
 <script>
+import BaseChart from "./ChartBase";
 import Axios from "axios";
-import { Line } from "vue-chartjs";
 
 export default {
-  extends: Line,
-  props: ["city"],
+  components: { "base-chart": BaseChart },
+  props: ["payload"],
   data: () => ({
-    payload: {}
+    loading: true,
+    options: {
+      legend: {
+        display: true,
+        position: "bottom",
+        label: {
+          boxWidth: 0,
+          usePointStyle: true
+        }
+      },
+      layout: {
+        padding: {
+          top: 20
+        }
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              suggestedMax: 20,
+              suggestedMin: -10,
+              beginAtZero: false
+            },
+            gridLines: {
+              display: true,
+              color: "rgba(245,245,245, 0.2)"
+            }
+          }
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              display: true,
+              color: "rgba(245,245,245, 0.2)"
+            }
+          }
+        ]
+      }
+    }
   }),
   computed: {
-    labels: function(){
-      return this.payload.list.map(wet => this.getDisplayTime(wet.dt_txt))
+    chartData: function() {
+      return {
+        labels: this.labels,
+        datasets: [
+          {
+            label: "Temperature of day",
+            data: this.weatherData,
+            backgroundColor: "rgba(33,33,33, 0)",
+            pointBackgroundColor: "rgba(255,77,13, 0.5)",
+            pointRadius: 4,
+            pointHoverRadius: 10,
+            borderColor: "rgba(255,77,13, 1)",
+            borderWidth: 2
+          },
+          {
+            label: "Feel temp of day",
+            data: this.feelWeatherData,
+            backgroundColor: "rgba(33,33,33, 0)",
+            pointBackgroundColor: "rgba(155,26,252, 0.5)",
+            borderColor: "rgba(155,26,252, 1)",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 10
+          },
+          {
+            label: "Humidity temp of day",
+            data: this.humidityData,
+            backgroundColor: "rgba(33,33,33, 0)",
+            pointBackgroundColor: "rgba(228,234,30, 0.5)",
+            borderColor: "rgba(228,234,30, 1)",
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 10
+          }
+        ]
+      };
     },
-    data: function(){
-      console.log(this.payload.list.map(wet => Math.floor(wet.temp)))
-      return this.payload.list.map(wet => Math.floor(wet.main.temp))
+    labels: function() {
+      return this.payload.list.map(wet => this.getDisplayTime(wet.dt_txt));
+    },
+    weatherData: function() {
+      return this.payload.list.map(wet => wet.main.temp);
+    },
+    feelWeatherData: function() {
+      return this.payload.list.map(wet => wet.main.feels_like);
+    },
+    humidityData: function() {
+      return this.payload.list.map(wet => wet.main.humidity);
     }
   },
   methods: {
-    init: function() {
-      Axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast/?q=${this.city}&mode=json&APPID=dec442fc0b5e406209e27c81d738a110&units=metric&cnt=7`
-      )
-        .then(res => {
-          console.log(res.data);
-          this.payload = res.data;
-          this.render();
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     getDisplayTime: function(datestr) {
       const date = new Date(datestr);
       return `${date.getHours()}:00`;
-    },
-    render() {
-      this.renderChart(
-        {
-          //labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          labels: this.labels,
-          datasets: [
-            {
-              label: "",
-              data: this.data,
-              backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
-                "rgba(255, 206, 86, 0.2)",
-                "rgba(75, 192, 192, 0.2)",
-                "rgba(153, 102, 255, 0.2)",
-                "rgba(255, 159, 64, 0.2)"
-              ],
-              borderColor: [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)"
-              ],
-              borderWidth: 1
-            }
-          ]
-        },
-        {
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: false
-                }
-              }
-            ]
-          }
-        }
-      );
     }
   },
 
-  mounted() {
-    this.init();
+  async mounted() {
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style>
 </style>

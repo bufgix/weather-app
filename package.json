@@ -51,9 +51,11 @@
     }
   },
   "dependencies": {
+    "@sweetalert2/themes": "^3.1.0",
     "axios": "^0.18.0",
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
+    "sweetalert2": "^9.7.1",
     "vue": "^2.5.16",
     "vue-awesome": "^4.0.2",
     "vue-chartjs": "^3.5.0",
