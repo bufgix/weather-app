@@ -1,5 +1,27 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
+import fs from "fs";
+import path from "path";
 
+const DB_FILE = path.join(app.getPath('appData'), "weather-db.json")
+
+ipcMain.on('saveCity', (event, arg) => {
+  let dbData = {
+    city: arg
+  }
+  fs.writeFileSync(DB_FILE, JSON.stringify(dbData));
+
+})
+
+ipcMain.on('loadCity', (event, arg) => {
+  if (fs.existsSync(DB_FILE)){
+    fs.readFile(DB_FILE, (err, data) => {
+      event.sender.send("loadCity", JSON.parse(data).city);
+    })
+    
+  }else {
+    event.sender.send("loadCity", false);
+  }
+})
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html

@@ -35,6 +35,7 @@ import Axios from "axios";
 import WeatherChart from "./WeatherChart";
 import Icon from "vue-awesome/components/Icon";
 import Swal from "sweetalert2/src/sweetalert2.js";
+import { ipcRenderer } from "electron";
 
 export default {
   components: { "weather-chart": WeatherChart, Icon },
@@ -84,16 +85,26 @@ export default {
   },
   methods: {
     init() {
-      this.getInitalCity().then(res => {
-        this.city = res.data.city;
-        this.updateWeather();
-      }).catch(err => {
-        console.log(err);
-        Swal.fire({
-          title: "Error",
-          icon: "error",
-          text: `Error: ${err}`
-        })
+      ipcRenderer.send("loadCity");
+      ipcRenderer.on("loadCity", (event, data) => {
+        if (data) {
+          this.city = data;
+          this.updateWeather();
+        } else {
+          this.getInitalCity()
+            .then(res => {
+              this.city = res.data.city;
+              this.updateWeather();
+            })
+            .catch(err => {
+              console.log(err);
+              Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: `Error: ${err}`
+              });
+            });
+        }
       });
     },
     updateWeather() {
@@ -148,6 +159,7 @@ export default {
             .then(res => {
               this.city = value;
               this.updateWeather();
+              ipcRenderer.send("saveCity", this.city);
             })
             .catch(err => {
               Swal.fire({
