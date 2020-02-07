@@ -1,41 +1,43 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from "electron";
+import { menubar } from "menubar";
 import fs from "fs";
 import path from "path";
 
-const DB_FILE = path.join(app.getPath('appData'), "weather-db.json")
+const DB_FILE = path.join(app.getPath("appData"), "weather-db.json");
 
-ipcMain.on('saveCity', (event, arg) => {
+ipcMain.on("saveCity", (event, arg) => {
   let dbData = {
     city: arg
-  }
+  };
   fs.writeFileSync(DB_FILE, JSON.stringify(dbData));
+});
 
-})
-
-ipcMain.on('loadCity', (event, arg) => {
-  if (fs.existsSync(DB_FILE)){
+ipcMain.on("loadCity", (event, arg) => {
+  if (fs.existsSync(DB_FILE)) {
     fs.readFile(DB_FILE, (err, data) => {
       event.sender.send("loadCity", JSON.parse(data).city);
-    })
-    
-  }else {
+    });
+  } else {
     event.sender.send("loadCity", false);
   }
-})
+});
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+if (process.env.NODE_ENV !== "development") {
+  global.__static = require("path")
+    .join(__dirname, "/static")
+    .replace(/\\/g, "\\\\");
 }
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+let mainWindow;
+const winURL =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:9080`
+    : `file://${__dirname}/index.html`;
 
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
@@ -44,28 +46,53 @@ function createWindow () {
     useContentSize: true,
     width: 560,
     frame: true
-  })
-  mainWindow.setMenuBarVisibility(false)
-  mainWindow.loadURL(winURL)
+  });
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.loadURL(winURL);
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
 }
 
-app.on('ready', createWindow)
+app.on("ready", () => {
+  mainWindow = new BrowserWindow({
+    height: 770,
+    useContentSize: true,
+    width: 560,
+    frame: true
+  });
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.loadURL(winURL);
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+  const mb = menubar({
+    index: winURL,
+    browserWindow: {
+      height: 600,
+      width: 560,
+      frame: false
+    }
+  });
+
+
+  mb.on("ready", () => {
+    console.log("Menubar app is ready.");
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
-})
+});
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (mainWindow === null) {
-    createWindow()
   }
-})
+});
 
 /**
  * Auto Updater
