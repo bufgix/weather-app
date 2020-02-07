@@ -16,21 +16,28 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import '~@sweetalert2/themes/dark/dark.scss';
+body {
+  
+  background-color: #212121;
+  color: #f5f5f5;
+}
+
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 3px;
-  background-color: #e4e4e4;
+  background-color: #212121;
 }
 
 ::-webkit-scrollbar {
   width: 5px;
-  background-color: #e4e4e4;
+  background-color: #212121;
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #212529;
+  background-color: #ff4d0d;
 }
 </style>
