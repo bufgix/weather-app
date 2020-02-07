@@ -76,7 +76,7 @@ export default {
             pointHoverRadius: 10
           },
           {
-            label: "Humidity temp of day",
+            label: "Humidity percentage",
             data: this.humidityData,
             backgroundColor: "rgba(33,33,33, 0)",
             pointBackgroundColor: "rgba(228,234,30, 0.5)",

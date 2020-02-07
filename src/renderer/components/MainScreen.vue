@@ -124,7 +124,6 @@ export default {
         `https://api.openweathermap.org/data/2.5/forecast/?q=${this.city}&mode=json&APPID=dec442fc0b5e406209e27c81d738a110&units=metric&cnt=7`
       )
         .then(res => {
-          console.log(res.data);
           this.chartPayload = res.data;
           this.chartloaded = true;
         })
