@@ -43,10 +43,13 @@ function createWindow () {
     height: 770,
     useContentSize: true,
     width: 560,
-    frame: true
+    frame: true,
+    webPreferences: {
+      nodeIntegration: true,
+    }, 
   })
   mainWindow.setMenuBarVisibility(false)
-  mainWindow.loadURL(winURL)
+  mainWindow.loadURL(`file://${__dirname}/index.html`)
 
   mainWindow.on('closed', () => {
     mainWindow = null
