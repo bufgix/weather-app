@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@sweetalert2/themes": "^3.1.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "jquery": "^3.5.0",
