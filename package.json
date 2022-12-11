@@ -65,7 +65,7 @@
     "vue-electron": "^1.0.6"
   },
   "devDependencies": {
-    "ajv": "^6.5.0",
+    "ajv": "^6.12.3",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-minify-webpack-plugin": "^0.3.1",
